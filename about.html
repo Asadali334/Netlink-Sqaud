@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>About Project</title>
+<link rel="stylesheet" href="style.css">
+
+<style>
+    body {
+        margin: 0;
+        background: #020b1b;
+        color: white;
+        font-family: 'Poppins', sans-serif;
+    }
+
+    h1 {
+        text-align: center;
+        font-size: 48px;
+        margin-top: 60px;
+        text-shadow: 0 0 25px cyan;
+        letter-spacing: 2px;
+    }
+
+    /* ====== FUTURISTIC CONTENT BOX ====== */
+    .box {
+        width: 80%;
+        margin: auto;
+        background: rgba(0, 45, 80, 0.75);
+        padding: 35px;
+        border-radius: 22px;
+        border: 1px solid cyan;
+        margin-top: 45px;
+        line-height: 1.7;
+        font-size: 20px;
+        box-shadow: 0 0 30px rgba(0,255,255,0.4);
+    }
+
+    /* ====== FIXED RIGHT-SIDE 3D BACK BUTTON ====== */
+    .back-btn {
+        position: fixed;
+        top: 22px;
+        right: 22px;
+        padding: 14px 26px;
+        background: linear-gradient(135deg, #02263e, #034a74);
+        border: 2px solid cyan;
+        border-radius: 14px;
+        cursor: pointer;
+        font-size: 20px;
+        color: cyan;
+        font-weight: bold;
+        box-shadow: 0 0 15px cyan, inset 0 0 10px rgba(0,255,255,0.3);
+        animation: pulseBtn 2s infinite;
+        transition: 0.3s ease;
+        opacity: 1;
+        z-index: 999;
+    }
+
+    .back-btn:hover {
+        transform: scale(1.12) translateY(-3px);
+        box-shadow: 0 0 30px cyan;
+    }
+
+    @keyframes pulseBtn {
+        0% { box-shadow: 0 0 10px cyan; }
+        50% { box-shadow: 0 0 28px cyan; }
+        100% { box-shadow: 0 0 10px cyan; }
+    }
+
+    /* ====== SCROLL DOWN = INVISIBLE / UP = VISIBLE ====== */
+    .back-btn.hide {
+        opacity: 0;
+        pointer-events: none;
+    }
+</style>
+</head>
+<body>
+
+  <header>
+      <div class="logo">
+    <img src="logo.png" alt="Logo">
+    <span>Netlink Squad</span>
+</div>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="Concepts.html">Concepts</a>
+      <a href="devices.html">Devices</a>
+      <a href="cable.html">Cables</a>
+      <a href="contact.html">Contact</a>
+      <a href="about.html" aria-current="page">About</a>
+    </nav>
+  </header>
+
+<h1>About This Website</h1>
+
+<div class="box">
+
+    <h2 style="color: cyan; margin-top:0;">About Our Services</h2>
+    <p>
+        • We provide complete networking and IT solutions.<br>
+        • Our goal is to help students and professionals learn practical networking.<br>
+        • We offer modern tools, diagrams, and real real-world learning.<br>
+        • Our services are designed to be clear, simple, and professional.
+    </p>
+
+    <h2 style="color: cyan;">Lab Services</h2>
+    <p>
+        • Networking practical lab setup<br>
+        • Router, switch, and firewall configuration<br>
+        • LAN creation and cable testing practice<br>
+        • Cisco simulation and topology labs<br>
+        • Complete classroom and practical training environment
+    </p>
+
+    <h2 style="color: cyan;">IT Services</h2>
+    <p>
+        • Server installation and management<br>
+        • LAN/WAN design and setup<br>
+        • WiFi, hotspot, and network security configuration<br>
+        • Data backup and system protection<br>
+        • Corporate IT support and troubleshooting
+    </p>
+
+    <h2 style="color: cyan;">Hardware Services</h2>
+    <p>
+        • Computer assembling and repairing<br>
+        • Installation of routers, switches, and access points<br>
+        • Ethernet, fiber, and coaxial cable wiring<br>
+        • Hardware testing and maintenance<br>
+        • Lab and office hardware setup
+    </p>
+
+    <h2 style="color: cyan;">Software & Networking Services</h2>
+    <p>
+        • Operating system installation and setup<br>
+        • Software tools and networking applications configuration<br>
+        • Firewall and basic cybersecurity setup<br>
+        • Cisco Packet Tracer topology designing<br>
+        • Network performance monitoring and optimization
+    </p>
+
+</div>
+
+
+<script>
+/* ------- Scroll Down → Hide / Scroll Up → Show Button ------- */
+let lastScroll = 0;
+const btn = document.getElementById("backBtn");
+
+window.addEventListener("scroll", () => {
+    let current = window.scrollY;
+
+    if (current > lastScroll) {
+        btn.classList.add("hide");   // hide button
+    } else {
+        btn.classList.remove("hide"); // show button
+    }
+
+    lastScroll = current;
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Network Requirements</title>
+<style>
+    body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background: #020b1b;
+        color: #fff;
+        overflow-x: hidden;
+    }
+
+    h1 {
+        text-align: center;
+        font-size: 45px;
+        text-shadow: 0 0 20px cyan;
+        margin-top: 40px;
+    }
+
+    .container {
+        width: 90%;
+        margin: auto;
+        margin-top: 40px;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 30px;
+    }
+
+    .card {
+        background: rgba(0, 30, 60, 0.7);
+        border: 1px solid cyan;
+        border-radius: 20px;
+        padding: 30px;
+        box-shadow: 0 0 20px cyan;
+        transition: transform .3s;
+    }
+
+    .card:hover {
+        transform: scale(1.03);
+    }
+
+    .diagram {
+        margin-top: 20px;
+        padding: 20px;
+        background: rgba(0, 255, 255, 0.1);
+        border: 1px solid cyan;
+        border-radius: 15px;
+        font-size: 17px;
+        text-align: center;
+        text-shadow: 0 0 10px cyan;
+    }
+
+    /* Back Button */
+    .back-btn {
+        position: fixed;
+        z-index: 9999;
+        
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        padding: 14px 25px;
+        background: #031f3b;
+        border: 2px solid cyan;
+        border-radius: 15px;
+        cursor: pointer;
+        font-size: 20px;
+        color: cyan;
+        box-shadow: 0 0 15px cyan;
+        animation: pulse 2s infinite;
+        transition: 0.3s;
+    }
+
+    .back-btn:hover { transform: scale(1.1); }
+
+    @keyframes pulse {
+        0% { box-shadow: 0 0 10px cyan; }
+        50% { box-shadow: 0 0 30px cyan; }
+        100% { box-shadow: 0 0 10px cyan; }
+    }
+    
+    /* Hide Back Button on Scroll */
+    .back-btn {
+        opacity: 1;
+        transition: opacity 0.4s ease;
+    }
+    .back-btn.hide {
+        opacity: 0;
+        pointer-events: none;
+    }
+</style>
+</head>
+<body>
+
+<a href="index.html" class="back-btn">⬅ Back</a>
+
+<h1>Network Requirements</h1>
+
+<div class="container">
+
+    <div class="card">
+        <h2>📌 5 Computers Network</h2>
+        <p>• 1 Switch (8-Port)<br>• Cat6 Cables<br>• Basic Router<br>• IP Scheme (192.168.1.x)</p>
+        <div class="diagram">
+            [ PC ] — [ Switch ] — [ Router ] — Internet
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>📌 20 Computers Network</h2>
+        <p>• 1 Switch (24-Port)<br>• Firewall<br>• Server (DHCP + File)<br>• VLAN Setup</p>
+        <div class="diagram">
+            PCs → 24-Port Switch → Firewall → Router → Internet<br>
+            Server → Switch (Separate VLAN)
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>📌 50+ Computers Network</h2>
+        <p>• L3 Switch<br>• Multiple VLANs<br>• Advanced Routing<br>• Load Balancing Routers<br>• UPS System</p>
+        <div class="diagram">
+            VLAN-10 → Students<br>
+            VLAN-20 → Admin<br>
+            VLAN-30 → Servers<br>
+            All Connected → L3 Switch → Firewall → Router
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>📌 100 Computers Network</h2>
+        <p>• 2× 48-Port Managed Switches<br>• 1× 24-Port Backup Switch<br>• Layer 3 Core Switch<br>• Redundant Firewall System<br>• Centralized Server Rack<br>• VLAN Segmentation (5–7 VLANs)<br>• Fiber Backbone Connectivity</p>
+        <div class="diagram">
+            VLAN-10 → Staff PCs<br>
+            VLAN-20 → Student PCs<br>
+            VLAN-30 → Servers<br>
+            VLAN-40 → CCTV<br>
+            VLAN-50 → WiFi APs<br><br>
+            All VLANs → Dual 48-Port Switches → L3 Core → Firewall Cluster → Router → Internet
+        </div>
+    </div>
+
+</div>
+
+<script>
+    let lastScroll = 0;
+    const btn = document.querySelector('.back-btn');
+
+    window.addEventListener('scroll', () => {
+        let current = window.scrollY;
+
+        if (current > lastScroll) {
+            btn.classList.add('hide'); // scrolling down → hide
+        } else {
+            btn.classList.remove('hide'); // scrolling up → show
+        }
+        lastScroll = current;
+    });
+</script>
+</body>
+</html>

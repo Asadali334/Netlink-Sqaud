@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Step-by-Step — Netlink Squad</title>
+<style>
+:root{ --accent:#00eaff; --bg:#020610; --text:#cfe8ff; --glow:0 0 20px rgba(0,212,255,0.35); }
+*{box-sizing:border-box}
+body{ margin:0; font-family:'Poppins', system-ui, Arial; background:radial-gradient(circle at top,#07162a,#020610); color:var(--text); }
+
+/* Back button container (fixed on right) */
+ .back-btn {
+        position: fixed;
+        z-index: 9999;
+        
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        padding: 14px 25px;
+        background: #031f3b;
+        border: 2px solid cyan;
+        border-radius: 15px;
+        cursor: pointer;
+        font-size: 20px;
+        color: cyan;
+        box-shadow: 0 0 15px cyan;
+        animation: pulse 2s infinite;
+        transition: 0.3s;
+    }
+
+    .back-btn:hover { transform: scale(1.1); }
+
+    @keyframes pulse {
+        0% { box-shadow: 0 0 10px cyan; }
+        50% { box-shadow: 0 0 30px cyan; }
+        100% { box-shadow: 0 0 10px cyan; }
+    }
+    
+    /* Hide Back Button on Scroll */
+    .back-btn {
+        opacity: 1;
+        transition: opacity 0.4s ease;
+    }
+    .back-btn.hide {
+        opacity: 0;
+        pointer-events: none;
+    }
+/* Page container */
+.container{ width:92%; max-width:1000px; margin:100px auto; padding:22px; background:linear-gradient(180deg, rgba(5,18,34,0.45), rgba(2,8,15,0.35)); border-radius:14px; border:1px solid rgba(0,212,255,0.06); box-shadow:0 20px 50px rgba(0,0,0,0.6); }
+h1{ color:var(--accent); text-shadow:0 0 18px rgba(0,212,255,0.2); margin:0 0 8px; }
+.card{ background:linear-gradient(180deg,#071427,#031b2f); padding:16px; border-radius:10px; margin-top:14px; border:1px solid rgba(0,212,255,0.04); }
+</style>
+</head>
+<body>
+ 
+ <a href="index.html" class="back-btn">⬅ Back</a>
+
+
+  <div class="container">
+    <h1>Step-by-Step Network Creation</h1>
+    <p style="opacity:0.9">Follow these expanded steps to design and deploy a network.</p>
+
+    <div class="card">
+      <h3>1. Decide scope & devices</h3>
+      <p>How many clients, servers, Wi-Fi clients, printers, etc.</p>
+    </div>
+
+    <div class="card">
+      <h3>2. Choose cabling</h3>
+      <p>Cat6 for LAN, fiber for long uplinks and backbone.</p>
+    </div>
+
+    <div class="card">
+      <h3>3. IP planning</h3>
+      <p>Use subnets, DHCP pools, static IPs for infra devices.</p>
+    </div>
+
+    <div class="card">
+      <h3>4. Security & monitoring</h3>
+      <p>VLANs, ACLs, logging, SNMP monitoring and regular audits.</p>
+    </div>
+  </div>
+</body>
+</html>

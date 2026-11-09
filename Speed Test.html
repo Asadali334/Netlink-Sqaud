@@ -1,0 +1,418 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Semi-circle Speed Meter (Ookla-like)</title>
+<link rel="stylesheet" href="style.css">
+<style>
+:root{
+  --bg:#071029; --card:#071a36; --accent:#00d0ff; --muted:#9fbbe8;
+}
+*{box-sizing:border-box}
+body{
+  margin:0; font-family:Inter,system-ui,Arial; background:var(--bg); color:#eaf3ff;
+  display:flex; align-items:center; justify-content:center; min-height:100vh; padding:28px;
+}
+ .back-btn {
+        position: fixed;
+        z-index: 9999;
+        
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        padding: 14px 25px;
+        background: #031f3b;
+        border: 2px solid cyan;
+        border-radius: 15px;
+        cursor: pointer;
+        font-size: 20px;
+        color: cyan;
+        box-shadow: 0 0 15px cyan;
+        animation: pulse 2s infinite;
+        transition: 0.3s;
+    }
+
+    .back-btn:hover { transform: scale(1.1); }
+
+    @keyframes pulse {
+        0% { box-shadow: 0 0 10px cyan; }
+        50% { box-shadow: 0 0 30px cyan; }
+        100% { box-shadow: 0 0 10px cyan; }
+    }
+    
+    /* Hide Back Button on Scroll */
+    .back-btn {
+        opacity: 1;
+        transition: opacity 0.4s ease;
+    }
+    .back-btn.hide {
+        opacity: 0;
+        pointer-events: none;
+    }
+.container{
+  width:860px; max-width:96%; text-align:center;
+}
+.header{ color:var(--accent); font-weight:800; margin-bottom:14px; font-size:22px; }
+.layout{ display:flex; gap:22px; align-items:flex-start; justify-content:center; flex-wrap:wrap; }
+
+/* Gauge card */
+.gauge-card{
+  width:520px; height:320px; background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.25));
+  border-radius:14px; padding:18px; position:relative; border:1px solid rgba(0,208,255,0.06);
+  box-shadow:0 12px 40px rgba(0,0,0,0.6), inset 0 0 40px rgba(0,210,255,0.02);
+}
+
+/* canvas area (semi circle) */
+.gauge-wrap{ width:100%; height:260px; display:flex; align-items:center; justify-content:center; position:relative; }
+canvas{ display:block; }
+
+/* center button/readout inside the semi circle */
+.center{
+  position:absolute; left:50%; top:48%; transform:translate(-50%,-5%);
+  width:160px; height:72px; border-radius:12px; background:rgba(255,255,255,0.03);
+  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px;
+  border:2px solid rgba(0,208,255,0.06);
+}
+.center .big{ font-size:20px; font-weight:800; color:var(--accent); }
+.center .small{ font-size:12px; color:var(--muted); }
+
+/* Start / Test again button */
+.controls{ margin-top:12px; display:flex; gap:10px; justify-content:center; }
+.btn{
+  padding:10px 14px; border-radius:10px; border:none; cursor:pointer;
+  background:linear-gradient(180deg,var(--accent),#2be9ff); color:#002; font-weight:800;
+  box-shadow:0 10px 30px rgba(0,208,255,0.12);
+}
+.btn.ghost{ background:transparent; color:var(--muted); border:1px solid rgba(255,255,255,0.03); box-shadow:none; }
+
+/* details panel */
+.details{
+  width:260px; background:var(--card); padding:14px; border-radius:12px; border:1px solid rgba(0,208,255,0.04);
+  box-shadow:0 8px 28px rgba(0,210,255,0.03); display:flex; flex-direction:column; gap:12px;
+}
+.row{ display:flex; justify-content:space-between; align-items:center; padding:6px 2px; }
+.label{ color:var(--muted); font-size:13px; }
+.value{ color:var(--accent); font-weight:800; font-size:18px; }
+.note{ font-size:12px; color:#9fbbe8; margin-top:4px; }
+
+@media (max-width:880px){
+  .layout{ flex-direction:column; align-items:center; }
+  .gauge-card{ width:96%; }
+  .details{ width:96%; max-width:520px; }
+}
+
+</style>
+</head>
+<body>
+ <a href="index.html" class="back-btn">⬅ Back</a>
+
+
+  <div class="container">
+    <div class="header">Internet Speed Test</div>
+
+    <div class="layout">
+      <div class="gauge-card" role="application" aria-label="speed meter">
+        <div class="gauge-wrap">
+          <canvas id="gauge" width="480" height="260" aria-hidden="true"></canvas>
+
+          <div class="center" id="centerBox">
+            <div id="displayVal" class="big">0.00 Mbps</div>
+            <div class="small">Live speed</div>
+          </div>
+        </div>
+
+        <div class="controls">
+          <button id="start" class="btn">Start</button>
+          <button id="again" class="btn ghost" style="display:none">Test Again</button>
+        </div>
+      </div>
+
+      <div class="details" aria-live="polite">
+        <div class="row"><div class="label">Download</div><div id="dl" class="value">-</div></div>
+        <div class="row"><div class="label">Upload</div><div id="ul" class="value">-</div></div>
+        <div class="row"><div class="label">Ping</div><div id="pg" class="value">-</div></div>
+        <div class="note" id="note">Press Start. Download test may use several MB; CORS may force a simulated run.</div>
+      </div>
+    </div>
+  </div>
+
+<script>
+/* -------------------------
+  Semi-circle Gauge — Clockwise
+  White torch-style needle (inside meter)
+  Readouts shown with exactly 2 decimals
+--------------------------*/
+
+const canvas = document.getElementById('gauge');
+const ctx = canvas.getContext('2d', { alpha: true });
+const W = canvas.width, H = canvas.height;
+const cx = W/2, cy = H*1.05;      // center located slightly below canvas so we get a half circle
+const R = 110;                    // radius for semi circle drawing
+const MARKS = [0,5,10,50,100,250,500,750,1000];
+const MIN = 0, MAX = 1000;
+const START_ANGLE = Math.PI;      // leftmost (180 deg)
+const END_ANGLE   = 0;            // rightmost (0 deg) -> clockwise increasing
+const needleLen = R - 8;
+
+// DOM
+const startBtn = document.getElementById('start');
+const againBtn = document.getElementById('again');
+const displayVal = document.getElementById('displayVal');
+const dlEl = document.getElementById('dl'), ulEl = document.getElementById('ul'), pgEl = document.getElementById('pg'), noteEl = document.getElementById('note');
+
+let animReq = null, running = false;
+
+/* draw static gauge background */
+function drawBase(){
+  ctx.clearRect(0,0,W,H);
+  // soft background arc base
+  ctx.lineWidth = 22;
+  ctx.lineCap = 'round';
+  const grad = ctx.createLinearGradient(0,0,W,0);
+  grad.addColorStop(0,'rgba(0,210,255,0.06)');
+  grad.addColorStop(1,'rgba(0,210,255,0.02)');
+  ctx.strokeStyle = grad;
+  ctx.beginPath();
+  ctx.arc(cx, cy, R, START_ANGLE, END_ANGLE, false);
+  ctx.stroke();
+
+  // colored gradient arc segments (for visual bands)
+  const steps = 160;
+  for(let i=0;i<=steps;i++){
+    const t = i/steps;
+    const angle = START_ANGLE + (END_ANGLE - START_ANGLE) * t;
+    const mb = MIN + (MAX - MIN) * t;
+    // basic color map: cool -> warm
+    const intensity = Math.min(1, mb/600);
+    const r = Math.floor(255*intensity);
+    const g = Math.floor(210 - 120*intensity);
+    const b = Math.floor(255 - 255*intensity*0.6);
+    ctx.beginPath();
+    ctx.strokeStyle = `rgba(${r},${g},${b},0.95)`;
+    ctx.lineWidth = 14;
+    ctx.arc(cx, cy, R, angle, angle + 0.01, false);
+    ctx.stroke();
+  }
+
+  // ticks and labels
+  ctx.fillStyle = 'rgba(0,210,255,0.95)';
+  ctx.font = '600 12px Inter, Arial';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  MARKS.forEach(v=>{
+    const t = (v - MIN) / (MAX - MIN);
+    const angle = START_ANGLE + (END_ANGLE - START_ANGLE) * t;
+    const tx = cx + Math.cos(angle) * (R + 24);
+    const ty = cy + Math.sin(angle) * (R + 24);
+    ctx.fillText(String(v), tx, ty);
+    // tick
+    const x1 = cx + Math.cos(angle)*(R - 10);
+    const y1 = cy + Math.sin(angle)*(R - 10);
+    const x2 = cx + Math.cos(angle)*(R + 6);
+    const y2 = cy + Math.sin(angle)*(R + 6);
+    ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.strokeStyle='rgba(0,210,255,0.14)'; ctx.lineWidth=2; ctx.stroke();
+  });
+
+  // inner glossy arc
+  ctx.beginPath();
+  ctx.arc(cx, cy, R - 36, START_ANGLE, END_ANGLE, false);
+  ctx.strokeStyle = 'rgba(255,255,255,0.02)';
+  ctx.lineWidth = 28; ctx.stroke();
+}
+
+/* draw needle as white torch inside the gauge; valueMbps -> angle */
+function drawNeedle(valueMbps){
+  // clamp and map
+  const t = Math.max(0, Math.min(1, (valueMbps - MIN)/(MAX - MIN)));
+  const angle = START_ANGLE + (END_ANGLE - START_ANGLE) * t;
+
+  // cone glow (white subtle)
+  ctx.save();
+  ctx.translate(cx, cy);
+  ctx.rotate(angle);
+  // cone gradient
+  const cone = ctx.createLinearGradient(0, -6, needleLen, 0);
+  cone.addColorStop(0, 'rgba(255,255,255,0.28)');
+  cone.addColorStop(0.6, 'rgba(255,255,255,0.06)');
+  cone.addColorStop(1, 'rgba(255,255,255,0.00)');
+  ctx.beginPath();
+  ctx.moveTo(6,0); ctx.lineTo(needleLen, -8); ctx.lineTo(needleLen, 8); ctx.closePath();
+  ctx.fillStyle = cone; ctx.fill();
+
+  // needle body (white torch)
+  const bodyGrad = ctx.createLinearGradient(0,0,needleLen,0);
+  bodyGrad.addColorStop(0, 'rgba(255,255,255,0.98)');
+  bodyGrad.addColorStop(1, 'rgba(220,220,220,0.65)');
+  ctx.beginPath();
+  ctx.moveTo(3, -3); ctx.lineTo(needleLen-14, -3); ctx.lineTo(needleLen-18, 0); ctx.lineTo(needleLen-14, 3); ctx.lineTo(3,3); ctx.closePath();
+  ctx.fillStyle = bodyGrad; ctx.fill();
+
+  // needle highlight
+  ctx.beginPath(); ctx.moveTo(6,-1); ctx.lineTo(needleLen-20,-1); ctx.lineTo(needleLen-24,0); ctx.lineTo(needleLen-20,1); ctx.lineTo(6,1); ctx.closePath();
+  ctx.fillStyle = 'rgba(255,255,255,0.6)'; ctx.fill();
+
+  // hub
+  ctx.beginPath(); ctx.arc(0,0,8,0,Math.PI*2); ctx.fillStyle='rgba(0,0,0,0.8)'; ctx.fill();
+  ctx.beginPath(); ctx.arc(0,0,4,0,Math.PI*2); ctx.fillStyle='rgba(255,255,255,0.06)'; ctx.fill();
+
+  ctx.restore();
+}
+
+/* render function: base + needle + live text */
+function render(value){
+  drawBase();
+  drawNeedle(value);
+  displayVal.textContent = value.toFixed(2) + ' Mbps'; // exactly 2 decimals
+}
+
+/* ---------------------------
+   Measurement routine
+   Attempts real download streaming; falls back to simulation
+   ---------------------------*/
+
+const TEST_FILES = [
+  'https://speed.hetzner.de/100MB.bin',
+  'https://speed.hetzner.de/10MB.bin',
+  'https://download.samplelib.com/mp4/sample-20mb.mp4'
+];
+
+function now(){ return performance.now(); }
+
+async function measurePing(){
+  try{
+    const t0 = now();
+    const r = await fetch('https://www.cloudflare.com/cdn-cgi/trace', {cache:'no-store', mode:'cors'});
+    const t1 = now();
+    if(!r.ok) throw new Error('ping fail');
+    return Math.max(1, Math.round(t1 - t0));
+  }catch(e){
+    return Math.floor(Math.random()*40)+8;
+  }
+}
+
+async function measureDownload(onProgress){
+  let totalBytes = 0;
+  let totalTime = 0;
+  let succeeded = false;
+
+  for(const url of TEST_FILES){
+    try{
+      const t0 = now();
+      const res = await fetch(url + '?cache=' + Math.random(), {cache:'no-store', mode:'cors'});
+      if(!res.ok) throw new Error('bad res');
+      succeeded = true;
+
+      if(res.body && res.body.getReader){
+        const reader = res.body.getReader();
+        let done = false;
+        while(!done){
+          const {done: d, value} = await reader.read();
+          if(d){ done = true; break; }
+          totalBytes += value.byteLength;
+          const tNow = now();
+          const elapsed = (tNow - t0) / 1000;
+          const mbpsInstant = (totalBytes * 8) / (elapsed * 1024 * 1024);
+          onProgress(mbpsInstant);
+        }
+        totalTime += (now() - t0) / 1000;
+      } else {
+        const buff = await res.arrayBuffer();
+        const t1 = now();
+        totalBytes += buff.byteLength;
+        const elapsed = (t1 - t0) / 1000;
+        totalTime += elapsed;
+        const mbps = (buff.byteLength * 8) / (elapsed * 1024 * 1024);
+        onProgress(mbps);
+      }
+      await new Promise(r=>setTimeout(r,200));
+    }catch(err){
+      console.warn('dl try failed', err);
+    }
+  }
+
+  if(!succeeded) throw new Error('no downloads available');
+
+  const finalMbps = (totalBytes * 8) / (Math.max(totalTime, 0.01) * 1024 * 1024);
+  return finalMbps;
+}
+
+/* realistic simulation fallback */
+function simulatedRun(onProgress){
+  return new Promise(async (resolve)=>{
+    const target = Math.round((Math.random()*0.8 + 0.2) * (Math.random()>0.6 ? (Math.random()*900+100) : (Math.random()*200+10)));
+    const duration = 2000 + Math.random()*1600;
+    const steps = 80;
+    for(let i=0;i<=steps;i++){
+      const t = i/steps;
+      const val = target * (1 - Math.pow(1-t, 3)); // ease-out
+      const jitter = Math.sin(i*0.7)*(Math.random()*0.6);
+      onProgress(Math.max(0, val + jitter));
+      await new Promise(r=>setTimeout(r, duration/steps));
+    }
+    resolve(target);
+  });
+}
+
+/* orchestrator */
+async function runTest(){
+  if(running) return;
+  running = true;
+  startBtn.disabled = true; startBtn.textContent='Running...';
+  dlEl.textContent = '-'; ulEl.textContent='-'; pgEl.textContent='-';
+  noteEl.textContent = 'Measuring ping + download. If blocked, simulation will run.';
+  render(0);
+
+  // ping
+  const ping = await measurePing();
+  pgEl.textContent = ping + ' ms';
+
+  let last = 0;
+  const onProgress = (mbps) => {
+    // smooth
+    last = last*0.75 + mbps*0.25;
+    render(last);
+  };
+
+  let downloadResult = 0;
+  try{
+    downloadResult = await measureDownload(onProgress);
+    render(downloadResult);
+    dlEl.textContent = downloadResult.toFixed(2) + ' Mbps';
+  }catch(e){
+    console.warn('real download failed, simulating', e);
+    const target = await simulatedRun(onProgress);
+    render(target);
+    dlEl.textContent = target.toFixed(2) + ' Mbps (sim)';
+    noteEl.textContent = 'Real downloads blocked/cors failed — simulated reading shown.';
+    downloadResult = target;
+  }
+
+  // upload = estimated fraction (simulated unless you provide endpoint)
+  const uploadEst = Math.max(0.5, (downloadResult * (0.12 + Math.random()*0.45)));
+  ulEl.textContent = uploadEst.toFixed(2) + ' Mbps (sim)';
+
+  // finish UI
+  startBtn.style.display = 'none';
+  againBtn.style.display = 'inline-block';
+  startBtn.disabled = false; startBtn.textContent='Start';
+  noteEl.textContent = 'Test complete. Click Test Again to re-run.';
+  running = false;
+}
+
+function resetTest(){
+  render(0);
+  displayVal.textContent = '0.00 Mbps';
+  dlEl.textContent = '-'; ulEl.textContent='-'; pgEl.textContent='-';
+  noteEl.textContent = 'Press Start. Download test may use several MB.';
+  startBtn.style.display = 'inline-block';
+  againBtn.style.display = 'none';
+}
+
+/* init */
+render(0);
+startBtn.addEventListener('click', runTest);
+againBtn.addEventListener('click', ()=>{ resetTest(); runTest(); });
+</script>
+</body>
+</html>

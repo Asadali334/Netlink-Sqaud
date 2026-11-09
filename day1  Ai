@@ -1,0 +1,3 @@
+print("Hello AI")
+name = input("Apna naam likho: ")
+print("Welcome", name, "AI ki duniya mein")

@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Networking Devices</title>
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        .exp{
+            color: #2D8EF5;
+        }
+        .req-card {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            border-radius: 12px;
+            background: #102048;
+            box-shadow: 0px 0px 10px #00c8ff80;
+        }
+
+        .req-card img {
+            width: 150px;
+            border-radius: 10px;
+            margin-left: 20px;
+        }
+
+        .req-card ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+
+        .req-card h3 {
+            margin-bottom: 10px;
+        }
+
+        /* Mobile view fix */
+        @media (max-width: 700px) {
+            .req-card {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .req-card img {
+                margin: 15px auto 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Header -->
+    <header>
+        <div class="logo">
+            <img src="logo.png" alt="Logo">
+            <span>Netlink Squad</span>
+        </div>
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="Concepts.html">Concepts</a>
+            <a class="active" href="devices.html">Devices</a>
+            <a href="cable.html">Cables</a>
+            <a href="contact.html">Contact</a>
+            <a href="about.html">About</a>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <h1>Networking Devices</h1>
+        <p>Explore the devices that build modern computer networks.</p>
+    </section>
+
+    <section class="network-guide">
+        <h2>Devices Used in Networking</h2>
+
+        <div class="requirement-grid">
+
+            <!-- Router -->
+            <div class="req-card">
+                <div>
+                    <h3>🔹 Router</h3>
+                    <ul>
+                        <li>Connects networks together</li>
+                        <li>Assigns IP via DHCP</li>
+                        <li>Performs NAT</li>
+                        <li>Routes packets between networks</li>
+                        <h3 class="exp">📘 Explanation </h3>
+                        <li>
+                            <p>A router connects multiple networks and intelligently chooses the best path
+                                for data packets. It works like a traffic manager between your local network
+                                and the internet.</p>
+                        </li>
+                    </ul>
+                </div>
+                <img src="router1.png" alt="Router Image">
+            </div>
+            
+            <!-- Switch -->
+            <div class="req-card">
+                <div>
+                    <h3>🔹 Switch</h3>
+                    <ul>
+                        <li>Connects multiple devices</li>
+                        <li>Operates at Layer 2</li>
+                        <li>Uses MAC address table</li>
+                        <li>Supports VLANs</li>
+                        <h3 class="exp">📘 Explanation</h3>
+                        <li>
+                            <p>A switch sends data only to the device it is meant for using MAC address lookup. It improves speed
+                    and avoids unnecessary broadcasting.</p>
+                        </li>
+                    </ul>
+                </div>
+                <img src="switch1.png" alt="Switch Image">
+            </div>
+            
+            <!-- Firewall -->
+            <div class="req-card">
+                <div>
+                    <h3>🔹 Firewall</h3>
+                    <ul>
+                        <li>Blocks unauthorized traffic</li>
+                        <li>Monitors network packets</li>
+                        <li>Enhances data security</li>
+                        <h3 class="exp">📘 Explanation</h3>
+                        <li>
+                            <p>A firewall protects your network like a security guard. It checks every packet and allows only safe
+                    traffic to enter your network.</p>
+                        </li>
+                    </ul>
+                </div>
+                <img src="firewall2.jpg" alt="Firewall Image">
+            </div>
+            
+            <!-- Bridge -->
+            <div class="req-card">
+                <div>
+                    <h3>🔹 Bridge</h3>
+                    <ul>
+                        <li>Divides large networks</li>
+                        <li>Reduces excess traffic</li>
+                        <li>Filters data using MAC</li>
+                        <li>Improves performance</li>
+                        <h3 class="exp">📘 Explanation</h3>
+                        <li>
+                            <p>A bridge connects two parts of a network to reduce congestion. It decides which traffic should pass
+                    and which should stay in its segment.</p>
+                        </li>
+                    </ul>
+                </div>
+                <img src="bridge1.png" alt="Bridge Image">
+            </div>
+            
+            <!-- Hub -->
+            <div class="req-card">
+                <div>
+                    <h3>🔹 Hub</h3>
+                    <ul>
+                        <li>Connects multiple devices</li>
+                        <li>Broadcasts data to all ports</li>
+                        <li>Expands small networks</li>
+                        <li>Low-cost device</li>
+                        <h3 class="exp">📘 Explanation</h3>
+                        <li>
+                            <p>A hub sends data to every device, even if only one device needs it. This causes collisions and slows
+                    down the network.</p>
+                        </li>
+                    </ul>
+                </div>
+                <img src="hub1.png" alt="Hub Image">
+            </div>
+            
+            <!-- Repeater -->
+            <div class="req-card">
+                <div>
+                    <h3>🔹 Repeater</h3>
+                    <ul>
+                        <li>Extends signals</li>
+                        <li>Boosts weak signals</li>
+                        <li>Prevents data loss</li>
+                        <li>Increases network range</li>
+                        <h3 class="exp">📘 Explanation </h3>
+                        <li>
+                            <p>Repeaters amplify weak network signals to extend cable distance without loss of quality</p>
+                        </li>
+                    </ul>
+                </div>
+                <img src="repeater1.png" alt="Repeater Image">
+            </div>
+            
+        </div>
+    </section>
+    
+
+</body>
+
+</html>

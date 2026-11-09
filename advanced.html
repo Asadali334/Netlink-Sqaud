@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Advanced Networking</title>
+
+<style>
+    body {
+        margin: 0;
+        background: #020b1b;
+        font-family: 'Poppins', sans-serif;
+        color: white;
+        overflow-x: hidden;
+    }
+
+    h1 {
+        text-align: center;
+        font-size: 48px;
+        text-shadow: 0 0 30px cyan;
+        margin-top: 60px;
+        letter-spacing: 2px;
+    }
+
+    /* ====== 3D FIXED BACK BUTTON (RIGHT SIDE) ====== */
+    .back-btn {
+        position: fixed;
+        top: 25px;
+        right: 25px;
+        padding: 14px 26px;
+        background: linear-gradient(135deg, #02263e, #034a74);
+        border: 2px solid cyan;
+        border-radius: 14px;
+        cursor: pointer;
+        font-size: 20px;
+        color: cyan;
+        font-weight: bold;
+        box-shadow: 0 0 15px cyan, inset 0 0 10px rgba(0,255,255,0.3);
+        transition: 0.3s ease;
+        animation: neonPulse 2s infinite;
+        opacity: 1;
+        z-index: 999;
+    }
+
+    .back-btn:hover {
+        transform: scale(1.12) translateY(-3px);
+        box-shadow: 0 0 30px cyan;
+    }
+
+    @keyframes neonPulse {
+        0% { box-shadow: 0 0 15px cyan; }
+        50% { box-shadow: 0 0 35px cyan; }
+        100% { box-shadow: 0 0 15px cyan; }
+    }
+
+    /* ====== CONTENT BOX ====== */
+  .diagram-box {
+    width: 85%;
+    margin: auto;
+    background: rgba(0, 50, 90, 0.75);
+    padding: 30px;
+    border-radius: 22px;
+    border: 1px solid cyan;
+    box-shadow: 0 0 35px rgba(0,255,255,0.5);
+    margin-top: 55px;
+    transition: .35s ease;
+}
+
+
+    .diagram-box:hover {
+        transform: scale(1.03);
+        box-shadow: 0 0 45px cyan;
+    }
+
+    .diagram-title {
+        font-size: 28px;
+        color: cyan;
+        text-shadow: 0 0 15px cyan;
+        margin-bottom: 10px;
+    }
+
+    .diagram {
+        background: rgba(0,255,255,0.1);
+        padding: 22px;
+        border: 1px solid cyan;
+        border-radius: 16px;
+        margin-top: 18px;
+        text-align: center;
+        text-shadow: 0 0 12px cyan;
+        font-size: 18px;
+        line-height: 1.7;
+    }
+
+    /* Improve readability */
+    p {
+        font-size: 17px;
+        opacity: 0.85;
+        line-height: 1.6;
+    }
+</style>
+</head>
+<body>
+
+<a href="index.html" class="back-btn" id="backBtn">⬅ Back</a>
+
+<h1>Advanced Networking Diagrams</h1>
+
+<!-- ENTERPRISE NETWORK -->
+<div class="diagram-box">
+    <h2 class="diagram-title">⭐ Enterprise Network Topology</h2>
+    <p>A typical corporate network with core, distribution and access layers.</p>
+
+    <div class="diagram">
+        Internet  
+        ↓  
+        Firewall  
+        ↓  
+        Core Switch  
+        ↓  
+        Distribution Switch  
+        ↓  
+        Access Switch → PCs / Printers / Wireless AP  
+        ↓  
+        Servers (DNS, DHCP, File, Mail)
+    </div>
+</div>
+
+<!-- MPLS WAN -->
+<div class="diagram-box">
+    <h2 class="diagram-title">⭐ MPLS / Wide Area Network (ISP-Level)</h2>
+    <p>Used by banks, government, multi-branch companies.</p>
+
+    <div class="diagram">
+        Branch A Router → MPLS Cloud → HQ Core Router  
+        Branch B Router → MPLS Cloud → HQ Firewall  
+        HQ Firewall → Data Center (Servers & Storage)
+    </div>
+</div>
+
+<!-- DATA CENTER -->
+<div class="diagram-box">
+    <h2 class="diagram-title">⭐ Modern Data Center (Spine–Leaf Architecture)</h2>
+    <p>This design provides low latency and scalable traffic flow.</p>
+
+    <div class="diagram">
+        Spine Switch 1 ↔ Leaf Switches ↔ Servers  
+        Spine Switch 2 ↔ Leaf Switches ↔ Storage  
+        Load Balancers ↔ Firewall ↔ Internet  
+        SDN Controller → Whole Network Automation
+    </div>
+</div>
+
+<!-- CLOUD + HYBRID NETWORK -->
+<div class="diagram-box">
+    <h2 class="diagram-title">⭐ Hybrid Cloud Network (On-Prem + Cloud)</h2>
+
+    <p>Modern companies use Azure / AWS with their own data center linked via VPN or Direct Connect.</p>
+
+    <div class="diagram">
+        On-Prem Firewall → VPN Tunnel → Cloud Gateway  
+        On-Prem Servers ↔ Cloud Virtual Machines  
+        Cloud Storage ↔ Local Backup Server  
+        Cloud Load Balancer ↔ Web Apps ↔ Users
+    </div>
+</div>
+
+<!-- ISP ARCHITECTURE -->
+<div class="diagram-box">
+    <h2 class="diagram-title">⭐ ISP Backbone Architecture</h2>
+
+    <p>Used by PTCL, StormFiber, Nayatel, and large service providers.</p>
+
+    <div class="diagram">
+        Customer Router → GPON/ONT → OLT  
+        OLT → Fiber Distribution → Core Router  
+        Core Router → BGP Peering → Internet Exchange  
+        CDN (Google/YouTube/Meta) → Local Users
+    </div>
+</div>
+
+<script>
+/* ====== SCROLL-DOWN = HIDE BUTTON — SCROLL-UP = SHOW ====== */
+let lastScroll = 0;
+const btn = document.getElementById("backBtn");
+
+window.addEventListener("scroll", () => {
+    let current = window.scrollY;
+
+    if (current > lastScroll) {
+        // scrolling DOWN → hide button
+        btn.style.opacity = "0";
+        btn.style.pointerEvents = "none";
+    } else {
+        // scrolling UP → show button
+        btn.style.opacity = "1";
+        btn.style.pointerEvents = "auto";
+    }
+
+    lastScroll = current;
+});
+</script>
+
+</body>
+</html>

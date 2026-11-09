@@ -1,0 +1,396 @@
+/* --------------------------------------------------
+   GLOBAL STYLES
+-------------------------------------------------- */
+/* -------------------------------------
+   BASE STYLING
+-------------------------------------- */
+body {
+    margin: 0;
+    padding: 0;
+    background: #0a0f24;
+    font-family: Arial, sans-serif;
+    color: white;
+     padding-top: 100px;
+      padding-bottom: 80px; 
+}
+
+h1, h2, h3 {
+    font-weight: bold;
+}
+
+/* ROOT COLORS */
+:root{
+    --bg:#050814;
+    --panel:#0a1230;
+    --accent:#00d0ff;
+    --accent-2:#2be9ff;
+    --muted:#b6c4ff;
+    --card:#0f2144;
+    --rounded:14px;
+}
+
+/* RESET */
+* { box-sizing: border-box; }
+
+/* -------------------------------------
+   HEADER
+-------------------------------------- */
+/* -------------------------------------
+   HEADER (UPDATED)
+-------------------------------------- */
+header {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px 40px;
+    align-items: center;
+    background: #0d1433;
+    box-shadow: 0px 2px 10px #000;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 999;
+}
+
+header .logo {
+    font-size: 30px;
+    font-weight: bold;
+    color: #2D8EF5;   /* SAME COLOR AS LOGO */
+}
+
+/* Simple logo without background, box, or shadow */
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 800;
+    color: #2D8EF5;   /* SAME COLOR AS LOGO */
+    font-size: 30px;
+}
+
+.logo img {
+    width: 60px;
+    height: 60px;
+    object-fit: contain;
+    background: none;
+    box-shadow: none;
+    border: none;
+    border-radius: 0;
+}
+
+
+
+/* NAV LINKS UPDATED */
+nav a {
+    margin-left: 20px;
+    text-decoration: none;
+    color: #d8e2ff;
+    font-size: 16px;
+    font-weight: 600;        /* TEXT BOLDER */
+    padding-bottom: 6px;     /* space for underline */
+    position: relative;
+    transition: 0.3s;
+}
+
+/* Hover underline */
+nav a:hover::after {
+    width: 100%;
+}
+
+nav a:hover {
+    color: #2D8EF5;
+}
+
+/* White underline for active page */
+nav a.active::after {
+    content: "";
+    position: absolute;
+    bottom: -3px;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: #2D8EF5;   /* ACTIVE PAGE LINE */
+    border-radius: 2px;
+}
+
+/* Hover + active text color */
+nav a.active {
+    color: #2D8EF5;
+}
+
+/* Underline animation base */
+nav a::after {
+    content: "";
+    position: absolute;
+    bottom: -3px;
+    left: 0;
+    width: 0;
+    height: 3px;
+    background:  #2D8EF5;
+    border-radius: 2px;
+    transition: 0.3s;
+}
+
+
+/* -------------------------------------
+   HERO SECTION
+-------------------------------------- */
+.hero {
+    text-align: center;
+    padding: 80px 20px;
+    background: linear-gradient(180deg, #0d1433, #0a0f24);
+}
+
+.hero h1 {
+    font-size: 40px;
+    margin-bottom: 10px;
+}
+
+.hero p {
+    font-size: 18px;
+    color: #b0c4ff;
+}
+
+.container {
+    width: 85%;
+    max-width: 1100px;
+    margin: auto;
+}
+/* Diagram Section */
+.diagram-section {
+    text-align: center;
+    padding: 60px 20px;
+}
+
+.diagram-section h2 {
+    font-size: 28px;
+    margin-bottom: 40px;
+}
+
+/* Network Diagram */
+.network-diagram {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 40px;
+}
+
+/* Devices */
+.device {
+    background: #131c3d;
+    padding: 20px 35px;
+    border-radius: 10px;
+    font-size: 18px;
+    box-shadow: 0px 0px 12px #00d0ff;
+    animation: glow 2s infinite alternate;
+}
+
+/* Animated Lines */
+.line {
+    width: 130px;
+    height: 4px;
+    background: #00d0ff;
+    position: relative;
+    overflow: hidden;
+}
+
+.line::before {
+    content: "";
+    width: 25px;
+    height: 4px;
+    background: yellow;
+    position: absolute;
+    left: 0;
+    animation: move 1.4s linear infinite;
+}
+
+/* Glow Animation */
+@keyframes glow {
+    0% { box-shadow: 0px 0px 5px #00d0ff; }
+    100% { box-shadow: 0px 0px 20px #00d0ff; }
+}
+
+/* Packet Flow Animation */
+@keyframes move {
+    0% { left: 0; }
+    100% { left: 130px; }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .network-diagram {
+        flex-direction: column;
+        gap: 20px;
+    }
+    .line {
+        width: 4px;
+        height: 80px;
+    }
+    .line::before {
+        width: 4px;
+        height: 20px;
+        animation: move-vertical 1.3s linear infinite;
+    }
+}
+
+@keyframes move-vertical {
+    0% { top: 0; }
+    100% { top: 80px; }
+}
+
+/* -------------------------------------
+   HOMEPAGE TAB BUTTONS
+-------------------------------------- */
+.tabs-home {
+    margin-top: 35px;
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.tab-btn {
+    padding: 14px 22px;
+    background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
+    border: 1px solid rgba(0,208,255,0.2);
+    border-radius: 12px;
+    color: var(--muted);
+    font-weight: bold;
+    text-decoration: none;
+    font-size: 15px;
+    box-shadow: 0 0 14px rgba(0,208,255,0.05);
+    transition: 0.3s;
+}
+
+.tab-btn:hover {
+    background: linear-gradient(180deg, var(--accent), var(--accent-2));
+    color: #001;
+    transform: translateY(-4px);
+    box-shadow: 0 8px 28px rgba(0,208,255,0.25);
+}
+
+/* -------------------------------------
+   PAGE CONTENT SECTIONS
+-------------------------------------- */
+.network-guide h2 {
+    text-align: center;
+}
+
+.guide-box {
+    background: var(--card);
+    padding: 20px;
+    border-radius: 12px;
+     text-align: center;
+    border: 1px solid rgba(0,208,255,0.05);
+}
+.guide-box ul {
+    list-style-position: inside;   /* bullets text کے ساتھ center آئیں گے */
+    padding: 0;
+    margin: 0;
+    text-align: center;            /* text center */
+}
+
+
+.guide-box h3 { color: var(--accent); }
+
+.guide-box li {
+    margin: 8px 8px;
+    color: #d6e8ff;
+   
+    display: block;
+   
+}
+
+/* -------------------------------------
+   REQUIREMENTS PAGE GRID
+-------------------------------------- */
+.requirement-grid {
+    margin-top: 30px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18px;
+}
+
+.req-card {
+    background: var(--card);
+    padding: 18px;
+    border-radius: 12px;
+    border: 1px solid rgba(0,208,255,0.05);
+    box-shadow: 0 0 12px rgba(0,208,255,0.12);
+    transition: 0.3s;
+}
+
+.req-card:hover {
+    transform: scale(1.04);
+    box-shadow: 0 0 25px rgba(0,208,255,0.4);
+}
+
+.req-card h4 {
+    color: var(--accent);
+    margin-bottom: 10px;
+}
+
+/* -------------------------------------
+   ADVANCED DIAGRAM PAGE
+-------------------------------------- */
+.advanced-diagram h2 { color: var(--accent); }
+
+.diagram-container { 
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+    gap: 20px; 
+}
+
+.device {
+    background: #121c3d;
+    padding: 18px 28px;
+    border-radius: 10px;
+}
+
+.line-horizontal {
+    width: 240px;
+    height: 8px;
+    background: linear-gradient(90deg,#003a55,var(--accent));
+    border-radius: 8px;
+    position: relative;
+    overflow: hidden;
+}
+
+.packet {
+    width: 18px;
+    height: 8px;
+    background: yellow;
+    position: absolute;
+    animation: movePacket 1.6s linear infinite;
+}
+
+@keyframes movePacket {
+    0% { left: 0; }
+    100% { left: 220px; }
+}
+
+/* -------------------------------------
+   ABOUT PAGE
+-------------------------------------- */
+.about-box {
+    background: var(--card);
+    padding: 18px;
+    border-radius: 12px;
+    border: 1px solid rgba(0,208,255,0.05);
+    color: var(--muted);
+}
+
+.about-box h3 { color: var(--accent); }
+
+/* -------------------------------------
+   RESPONSIVE
+-------------------------------------- */
+@media (max-width: 768px) {
+    .requirement-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .tab-btn {
+        width: 100%;
+        text-align: center;
+    }
+}
